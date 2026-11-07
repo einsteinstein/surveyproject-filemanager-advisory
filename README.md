@@ -38,20 +38,6 @@ removes the uploaded shell unless `--keep` is given.
 
 Use it only against systems you own or are explicitly authorized to test.
 
-## Publishing
-
-See the GitHub Pages setup guide delivered with this advisory package, then
-enable Pages on the repository (Settings -> Pages -> Deploy from a branch ->
-`main` / root).
-
-Before enabling Pages, update the timeline and disclosure status in
-`advisory.txt` and `index.html`:
-
-- vendor notification date (or "pending");
-- CVE ID when assigned;
-- remove any test hostnames, account names, or screenshots that identify a
-  real target.
-
 ## License
 
 The PoC script is released under the MIT License. The advisory text may be
