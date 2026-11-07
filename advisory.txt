@@ -162,7 +162,7 @@ Offline check:
               IIS 10 / ASP.NET 4.0.30319.
   2026-11-08  affected range re-verified from the release archives: 2.2
               through 2.5; 2.0, 2.1 and 1.2.3 excluded.
-  2026-11-08  affected range re-verified; advisory and PoC prepared. CVE request pending.
+  2026-11-08  affected range re-verified; advisory and PoC published. CVE request pending.
 
 
 9. REFERENCES
