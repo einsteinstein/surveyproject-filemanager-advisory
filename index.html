@@ -96,6 +96,7 @@ under the application root.</p>
 <table class="meta">
   <tr><th>Product</th><td>Survey Project (NSurvey WebAdmin) — <a href="https://github.com/surveyproject/surveyproject">github.com/surveyproject/surveyproject</a></td></tr>
   <tr><th>Vendor</th><td>Survey Project / W3DevPro</td></tr>
+  <tr><th>Vendor notified</th><td>2026-09-17 (no response)</td></tr>
   <tr><th>Component</th><td><code>Filemanager/connectors/ashx/filemanager.ashx</code> (2.2) and
       <code>Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx</code> (2.3–2.5)</td></tr>
   <tr><th>CWE</th><td>CWE-434, CWE-22, CWE-306, CWE-863</td></tr>
@@ -201,8 +202,9 @@ curl -s "http://TARGET/Scripts/shell.aspx?cmd=whoami"</code></pre>
 is a <code>&lt;textarea&gt;</code> containing HTML-encoded JSON rather than raw JSON: a client must unescape
 it before parsing. The script handles both forms.</p>
 
-<p class="note"><strong>Disclosure status.</strong> No vendor patch is available; the project's last commit is
-from 2021-03-13. No CVE has been assigned yet. The timeline below records the verification dates.</p>
+<p class="note"><strong>Disclosure status.</strong> The vendor was notified on 2026-09-17 at
+mail@w3devpro.com and did not respond. No patch is available; the project's last commit is from
+2021-03-13. No CVE has been assigned yet.</p>
 
 <h2 id="detection">Detection</h2>
 <p>Request <code>?mode=getfolder&amp;path=/</code> on the handler paths above. A vulnerable instance returns
@@ -229,10 +231,11 @@ md5sum Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx
 
 <h2 id="timeline">Timeline</h2>
 <ul>
+  <li><strong>2026-09-17</strong> — report sent to the vendor (W3DevPro, mail@w3devpro.com); no response.</li>
   <li><strong>2026-09-17</strong> — verified end-to-end against the official v2.4-DOI release on IIS 10 /
       ASP.NET 4.0.30319.</li>
   <li><strong>2026-11-08</strong> — affected range re-verified from the release archives: 2.2 through 2.5;
-      2.0, 2.1, and 1.2.3 excluded. Advisory and PoC prepared; CVE request pending.</li>
+      2.0, 2.1, and 1.2.3 excluded. Advisory and PoC published; submitted to VulDB; CVE request pending.</li>
 </ul>
 
 <h2 id="references">References</h2>

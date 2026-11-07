@@ -8,6 +8,7 @@ Severity    : Critical
 CVSS 3.1    : 9.8 (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H)
 CWE         : CWE-434, CWE-22, CWE-306, CWE-863
 Vendor      : Survey Project / W3DevPro
+Vendor notified: 2026-09-17 (mail@w3devpro.com), no response
 Product     : Survey Project (NSurvey WebAdmin)
 Affected    : 2.2 Alpha, 2.2 Final, 2.3, 2.4, 2.4-DOI, 2.4-wpi, 2.5
 Status      : Unpatched; no CVE assigned yet
@@ -158,11 +159,12 @@ Offline check:
 
 8. TIMELINE
 
+  2026-09-17  report sent to the vendor (mail@w3devpro.com); no response.
   2026-09-17  verified end-to-end against the official v2.4-DOI release on
               IIS 10 / ASP.NET 4.0.30319.
   2026-11-08  affected range re-verified from the release archives: 2.2
-              through 2.5; 2.0, 2.1 and 1.2.3 excluded.
-  2026-11-08  affected range re-verified; advisory and PoC published. CVE request pending.
+              through 2.5; 2.0, 2.1 and 1.2.3 excluded. Advisory and PoC
+              published; submitted to VulDB. CVE request pending.
 
 
 9. REFERENCES

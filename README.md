@@ -8,6 +8,12 @@ ASP.NET connector bundled with Survey Project (NSurvey WebAdmin) 2.2–2.5.
 - Plain-text advisory: `advisory.txt`
 - PoC: `poc_surveyproject_filemanager.py`
 
+## Disclosure
+
+The vendor was notified on 2026-09-17 at mail@w3devpro.com and did not
+respond. The advisory and PoC were published on 2026-11-08 and submitted to
+VulDB. No CVE has been assigned yet.
+
 ## Affected versions
 
 2.2 Alpha, 2.2 Final, 2.3, 2.4, 2.4-DOI, 2.4-wpi, and 2.5. Versions 2.0, 2.1,
