@@ -1,4 +1,4 @@
-Survey Project (NSurvey WebAdmin) - unauthenticated file upload, file read,
+Survey™ Project Webapplication - unauthenticated file upload, file read,
 file delete and remote code execution in the bundled Filemanager ASP.NET
 connector
 
@@ -9,14 +9,14 @@ CVSS 3.1    : 9.8 (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H)
 CWE         : CWE-434, CWE-22, CWE-306, CWE-863
 Vendor      : Survey Project / W3DevPro
 Vendor notified: 2026-09-17 (mail@w3devpro.com), no response
-Product     : Survey Project (NSurvey WebAdmin)
+Product     : Survey™ Project Webapplication
 Affected    : 2.2 Alpha, 2.2 Final, 2.3, 2.4, 2.4-DOI, 2.4-wpi, 2.5
 Status      : Unpatched; no CVE assigned yet
 
 
 1. SUMMARY
 
-Survey Project bundles an old ASP.NET connector for the CKEditor "Filemanager"
+Survey™ Project Webapplication bundles an old ASP.NET connector for the CKEditor "Filemanager"
 plugin. The handler implements a mode switch (getinfo, getfolder, rename,
 delete, addfolder, download, add) and passes the request parameters path,
 currentpath, old, new and name directly into filesystem calls. It performs no
@@ -169,7 +169,7 @@ Offline check:
 
 9. REFERENCES
 
-  - Survey Project releases:
+  - Survey™ Project Webapplication releases:
     https://github.com/surveyproject/surveyproject/releases
   - Original component (ASP.NET connector discontinued after v0.8):
     https://github.com/simogeo/Filemanager

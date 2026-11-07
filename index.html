@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Survey Project Filemanager ASP.NET Connector — Unauthenticated RCE</title>
-<meta name="description" content="Unauthenticated file upload, file read, file delete and remote code execution in Survey Project (NSurvey WebAdmin) 2.2 through 2.5 via the bundled Filemanager ASP.NET connector.">
+<title>Survey™ Project Webapplication Filemanager ASP.NET Connector — Unauthenticated RCE</title>
+<meta name="description" content="Unauthenticated file upload, file read, file delete and remote code execution in Survey™ Project Webapplication 2.2 through 2.5 via the bundled Filemanager ASP.NET connector.">
 <style>
   :root{
     --bg:#fbfbfd; --fg:#15171c; --muted:#5b616e; --line:#e3e5ea;
@@ -68,7 +68,7 @@
 <main>
 
 <p class="kicker">Security Advisory · SP-FM-2026-01</p>
-<h1>Survey Project (NSurvey WebAdmin): unauthenticated RCE via the bundled Filemanager ASP.NET connector</h1>
+<h1>Survey™ Project Webapplication: unauthenticated RCE via the bundled Filemanager ASP.NET connector</h1>
 <p class="lede">The ASP.NET connector shipped with the CKEditor Filemanager plugin performs no authentication or
 authorization checks and takes every filesystem path from the HTTP request. An unauthenticated attacker can
 upload an <code>.aspx</code> shell, read <code>Web.config</code>, delete files, and rename or create paths
@@ -94,7 +94,7 @@ under the application root.</p>
 </p>
 
 <table class="meta">
-  <tr><th>Product</th><td>Survey Project (NSurvey WebAdmin) — <a href="https://github.com/surveyproject/surveyproject">github.com/surveyproject/surveyproject</a></td></tr>
+  <tr><th>Product</th><td>Survey™ Project Webapplication — <a href="https://github.com/surveyproject/surveyproject">github.com/surveyproject/surveyproject</a></td></tr>
   <tr><th>Vendor</th><td>Survey Project / W3DevPro</td></tr>
   <tr><th>Vendor notified</th><td>2026-09-17 (no response)</td></tr>
   <tr><th>Component</th><td><code>Filemanager/connectors/ashx/filemanager.ashx</code> (2.2) and
@@ -105,7 +105,7 @@ under the application root.</p>
 </table>
 
 <h2 id="summary">Summary</h2>
-<p>Survey Project bundles an old ASP.NET connector for the CKEditor “Filemanager” plugin. The handler
+<p>Survey™ Project Webapplication bundles an old ASP.NET connector for the CKEditor “Filemanager” plugin. The handler
 implements a <code>mode</code> switch (<code>getinfo</code>, <code>getfolder</code>, <code>rename</code>,
 <code>delete</code>, <code>addfolder</code>, <code>download</code>, <code>add</code>) and passes the request
 parameters <code>path</code>, <code>currentpath</code>, <code>old</code>, <code>new</code>, and
@@ -240,7 +240,7 @@ md5sum Scripts/ckeditor/Filemanager/connectors/ashx/filemanager.ashx
 
 <h2 id="references">References</h2>
 <ul>
-  <li>Survey Project releases — <a href="https://github.com/surveyproject/surveyproject/releases">github.com/surveyproject/surveyproject/releases</a></li>
+  <li>Survey™ Project Webapplication releases — <a href="https://github.com/surveyproject/surveyproject/releases">github.com/surveyproject/surveyproject/releases</a></li>
   <li>Original component (ASP.NET connector discontinued after v0.8) — <a href="https://github.com/simogeo/Filemanager">github.com/simogeo/Filemanager</a></li>
   <li>PHP-connector CVEs (distinct code): CVE-2025-46000, CVE-2025-46001, CVE-2025-46002</li>
   <li>CWE-434 — <a href="https://cwe.mitre.org/data/definitions/434.html">Unrestricted Upload of File with Dangerous Type</a></li>

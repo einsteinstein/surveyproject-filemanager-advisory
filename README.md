@@ -1,8 +1,8 @@
-# Survey Project Filemanager ASP.NET Connector — Advisory and PoC
+# Survey™ Project Webapplication Filemanager ASP.NET Connector — Advisory and PoC
 
 Security advisory and proof of concept for an unauthenticated file upload,
 file read, file delete, and remote code execution issue in the Filemanager
-ASP.NET connector bundled with Survey Project (NSurvey WebAdmin) 2.2–2.5.
+ASP.NET connector bundled with Survey™ Project Webapplication 2.2–2.5.
 
 - Advisory page: `index.html`
 - Plain-text advisory: `advisory.txt`

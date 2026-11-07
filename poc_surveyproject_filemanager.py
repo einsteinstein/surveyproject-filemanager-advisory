@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Proof of concept for the unauthenticated Filemanager ASP.NET connector in
-Survey Project (NSurvey WebAdmin).
+Survey™ Project Webapplication.
 
 Affected releases (verified from the official packages):
   2.2 Alpha, 2.2 Final      handler at /Filemanager/connectors/ashx/filemanager.ashx
@@ -208,7 +208,7 @@ def shell_path_for(directory, name):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Survey Project (NSurvey) Filemanager ASP.NET connector PoC",
+        description="Survey™ Project Webapplication Filemanager ASP.NET connector PoC",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
